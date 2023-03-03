@@ -1,0 +1,49 @@
+name: XX Destroy App Resources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+# https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+
+    env:
+      TF_VAR_gcp_region_name: ${{ vars.GCP_REGION_NAME }}
+      TF_VAR_gcp_organisation_id: ${{ vars.GCP_ORGANISATION_ID }}
+      TF_VAR_gcp_billing_account_id: ${{ vars.GCP_BILLING_ACCOUNT_ID }}
+      TF_VAR_gcp_iac_project_id: ${{ vars.GCP_IAC_PROJECT_ID }}
+      TF_VAR_gcp_iac_state_bucket_id: ${{ vars.GCP_IAC_STATE_BUCKET_ID }}
+      TF_VAR_container_image: ${{ vars.WEB_CONTAINER_IMAGE }}
+      TF_VAR_container_port: ${{ vars.WEB_CONTAINER_PORT }}
+      TF_VAR_github_repository: ${{ github.repository }}
+      TF_VAR_github_token: ${{ secrets.GH_REPOSITORY_PAT }}
+      #TF_VAR_github_token: ${{ secrets.GITHUB_TOKEN }} # TODO Remove GH_REPOSITORY_PAT and use this line if GITHUB_TOKEN ever gets secrets.read permission.
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Authorisation.
+    # Action automatically exports the GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    - name: Authorise with GCloud
+      uses: "google-github-actions/auth@v1"
+      with:
+        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_IAC_CREDENTIALS }}
+
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Init
+      run: |
+        terraform -chdir=iac/02-app-resources init -input=false -backend-config='bucket=${{ vars.GCP_IAC_STATE_BUCKET_ID }}' -backend-config='prefix=terraform/state/02-app'
+
+    - name: Terraform Apply -destroy
+      run: |
+        terraform -chdir=iac/02-app-resources apply -destroy -input=false -auto-approve
