@@ -53,7 +53,7 @@ This step will provision the IaC Seed resources (project and service account). T
     
     Login to your GitHub account and create a new fine grained PAT (Settings > Developer Settings > Personal Access Tokens > Fine Grained Tokens) with the permissions `Actions: Read and write`, `Metadata: Read-only`, `Secrets Read and write` and `Variables: Read and write`.
 
-    Copy the generated PAT (this will be pasted into the `tfvars` file subsequently).
+    Copy the generated PAT (this will be pasted into the `secret.tfvars` file subsequently).
     
     The PAT will be stored as a GitHub repository secret `GH_REPOSITORY_PAT` for use by subsequent steps.
 
@@ -165,6 +165,8 @@ This step will build the website / API into a Docker container and push it to yo
 
 The workflow is configured to execute automatically if any changes are pushed to the website / API source code in the `/src` directory.
 
+The workflow will update the GitHub variables with the new Docker image and then automatically invoke the previous workflow `02-iac-provision-app-resources` which will update Google Cloud Run with the new Docker image.
+
 ## Verification
 
 1. Get the CloudRun service URL:
@@ -179,11 +181,15 @@ The workflow is configured to execute automatically if any changes are pushed to
 
 ### IAM
 
-The file `\iac\02-app-resources\iam.tf` contains IAM definitions for the artifacts and web projects.
+The files `\iac\02-app-resources\artifacts-iam.tf` and `\iac\02-app-resources\web-iam.tf` contain IAM definitions for the artifacts and web projects.
 
 The given IAM admin definitions are only applied if the variable `environment` is configured to be one of the values defined by the variables `environment_labels_development` or `environment_labels_testing`.
 
 Add any IAM definitions as necessary for least privilege for production environments.
+
+### Housekeeping
+
+Newly build Docker images are added to the Google Artifact Registry Repository. Consider implementing a process to remove deprecated images so that unexpected storage charges aren't incurred.
 
 ## Optional Configuration
 
