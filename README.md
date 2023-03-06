@@ -1,6 +1,6 @@
 # Google Cloud Artifact Registry Repository & Cloud Run Template
 
-A template repository to provision a website / API using GitHub Codespaces, GitHub Actions, Terraform, Docker, Google Cloud Artifact Registry and Google Cloud Run.
+A template repository to provision a website / API using GitHub Codespaces, GitHub Actions, Terraform, Docker, Google Artifact Registry and Google Cloud Run.
 
 ## Introduction
 
@@ -8,7 +8,7 @@ This template consists of three steps:
 
 1. Initial provisioning (one time manual process) of the Infrastructure as Code (IaC) Seed resources - using the [Google / Terraform Bootstrap module](https://github.com/terraform-google-modules/terraform-google-bootstrap).
 1. Provisioning (repeatable GitHub Action) of the Google Cloud projects, Artifact Registry Repository and Cloud Run resources.
-1. Build, Push and Deployment (repeatable GitHub Action) of the web source code.
+1. Build, Push and Deployment (repeatable GitHub Action) of the website / API source code.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ This template consists of three steps:
   - the Billing Admins group (e.g. `gcp-billing-admins@<YOUR.DOMAIN>`) defined and populated.
 - A GitHub account.
 
-## Project Directories Overview
+## Project Directories
 
 ### `/.devcontainer`
 
