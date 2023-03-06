@@ -189,7 +189,7 @@ Add any IAM definitions as necessary for least privilege for production environm
 
 ### Housekeeping
 
-Newly build Docker images are added to the Google Artifact Registry Repository. Consider implementing a process to remove deprecated images so that unexpected storage charges aren't incurred.
+Newly build Docker images are added to the Google Artifact Registry Repository. Consider implementing a process to remove deprecated images so that unexpected storage charges aren't incurred. Similarly, consider implementing a process to remove deprecated Google Cloud Run revisions.
 
 ## Optional Configuration
 
