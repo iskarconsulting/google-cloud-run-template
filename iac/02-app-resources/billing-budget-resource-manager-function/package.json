@@ -1,0 +1,16 @@
+{
+  "name": "billing-budget-resource-manager",
+  "private": "true",
+  "version": "0.0.1",
+  "description": "GCP billing budget resource manager.",
+  "main": "function.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {},
+  "author": "Iskar Consulting <admin@iskar.co.uk>",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/run": "^0.4.1"
+  }
+}

@@ -26,8 +26,10 @@ jobs:
       TF_VAR_gcp_billing_account_id: ${{ vars.GCP_BILLING_ACCOUNT_ID }}
       TF_VAR_gcp_iac_project_id: ${{ vars.GCP_IAC_PROJECT_ID }}
       TF_VAR_gcp_iac_state_bucket_id: ${{ vars.GCP_IAC_STATE_BUCKET_ID }}
+      TF_VAR_gcp_iac_service_account_email: ${{ vars.GCP_IAC_SERVICE_ACCOUNT_EMAIL }}
       TF_VAR_container_image: ${{ vars.WEB_CONTAINER_IMAGE }}
       TF_VAR_container_port: ${{ vars.WEB_CONTAINER_PORT }}
+      TF_VAR_github_workspace: ${{ github.workspace }}
       TF_VAR_github_repository: ${{ github.repository }}
       TF_VAR_github_token: ${{ secrets.GH_REPOSITORY_PAT }}
       #TF_VAR_github_token: ${{ secrets.GITHUB_TOKEN }} # TODO Remove GH_REPOSITORY_PAT and use this line if GITHUB_TOKEN ever gets secrets.read permission.
@@ -58,6 +60,12 @@ jobs:
     - name: Terraform Validate
       run: |
         terraform validate -no-color
+
+    - name: Zip Billing Budget Resource Manager Function Source
+      run: |
+        pushd ./iac/02-app-resources/billing-budget-resource-manager-function
+        zip function-source.zip function.js package.json
+        popd
 
     - name: Terraform Plan
       id: plan

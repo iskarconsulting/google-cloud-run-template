@@ -21,6 +21,34 @@ module "bootstrap" {
   project_prefix          = "iac"
   tf_service_account_id   = "iac-service-account"
   tf_service_account_name = "Organisation IaC Service Account"
+  activate_apis = [
+    "serviceusage.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "logging.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "iam.googleapis.com",
+    "admin.googleapis.com",
+    "appengine.googleapis.com",
+    "storage-api.googleapis.com",
+    "monitoring.googleapis.com",
+    "billingbudgets.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "eventarc.googleapis.com",
+    "artifactregistry.googleapis.com"
+  ]
+  sa_org_iam_permissions = [
+    "roles/billing.costsManager",
+    "roles/cloudfunctions.admin",
+    "roles/iam.securityAdmin",
+    "roles/iam.serviceAccountAdmin",
+    "roles/logging.configWriter",
+    "roles/orgpolicy.policyAdmin",
+    "roles/resourcemanager.folderAdmin",
+    "roles/resourcemanager.organizationViewer",
+    "roles/resourcemanager.projectCreator",
+    "roles/storage.admin"
+  ]
 }
 
 # SERVICE ACCOUNT KEY
@@ -28,9 +56,13 @@ resource "google_service_account_key" "iac" {
   service_account_id = module.bootstrap.terraform_sa_name
 }
 
-# PROJECT CREATOR ROLE
-resource "google_organization_iam_member" "project_creator" {
-  org_id = var.gcp_organisation_id
-  role   = "roles/resourcemanager.projectCreator"
-  member = "serviceAccount:${module.bootstrap.terraform_sa_email}"
+# COMPUTE SERVICE ACCOUNT
+data "google_compute_default_service_account" "iac_project" {
+  project = module.bootstrap.seed_project_id
+}
+
+resource "google_service_account_iam_member" "iac-seed-compute-sa" {
+  service_account_id = data.google_compute_default_service_account.iac_project.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${module.bootstrap.terraform_sa_email}"
 }

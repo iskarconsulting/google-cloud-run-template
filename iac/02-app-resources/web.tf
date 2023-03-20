@@ -8,19 +8,10 @@ resource "random_id" "web_project_name_random_suffix" {
 
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project
 resource "google_project" "web" {
-  name            = "${var.gcp_web_project_name} ${title(var.environment)}"
-  project_id      = "${var.organisation_abbreviation}-${lower(var.gcp_web_project_name)}-${var.environment}-${random_id.web_project_id_random_suffix.hex}"
+  name            = "Web ${title(var.environment)}"
+  project_id      = "${var.organisation_abbreviation}-web-${var.environment}-${random_id.web_project_id_random_suffix.hex}"
   org_id          = var.gcp_organisation_id
   billing_account = var.gcp_billing_account_id
-}
-
-
-# APIs
-resource "google_project_service" "web_apis" {
-  for_each = var.gcp_web_project_apis
-
-  project = google_project.web.project_id
-  service = each.value
 }
 
 # CLOUD RUN

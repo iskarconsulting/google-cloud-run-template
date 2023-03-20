@@ -5,25 +5,7 @@ variable "organisation_abbreviation" {
 variable "environment" {
   type        = string
   description = "Label to describe the current environment: [dev|test|prod]."
-  default     = "development"
-}
-
-variable "environment_labels_development" {
-  type        = set(string)
-  description = "Set of posssible labels indicating development environment."
-  default     = ["dev", "development"]
-}
-
-variable "environment_labels_testing" {
-  type        = set(string)
-  description = "Set of possible labels indicating a testing environment."
-  default     = ["tst", "test", "testing"]
-}
-
-variable "environment_labels_production" {
-  type        = set(string)
-  description = "Set of possible labels indicating a production environment."
-  default     = ["prd", "prod", "production"]
+  default     = "dev"
 }
 
 variable "dev_test_admin_members" {
@@ -36,6 +18,10 @@ variable "github_token" {
 }
 
 variable "github_repository" {
+  type = string
+}
+
+variable "github_workspace" {
   type = string
 }
 
@@ -59,36 +45,8 @@ variable "gcp_iac_state_bucket_id" {
   type = string
 }
 
-variable "gcp_artifacts_project_name" {
+variable "gcp_iac_service_account_email" {
   type = string
-}
-
-variable "gcp_artifacts_project_name_suffix" {
-  type = string
-}
-
-variable "gcp_artifacts_project_apis" {
-  type = set(string)
-}
-
-variable "gcp_artifacts_repository_name" {
-  type = string
-}
-
-variable "gcp_web_project_name" {
-  type = string
-}
-
-variable "gcp_web_project_name_suffix" {
-  type = string
-}
-
-variable "gcp_web_project_apis" {
-  type = set(string)
-}
-
-variable "gcp_web_project_service_account_deploy_roles" {
-  type = set(string)
 }
 
 variable "domain_names" {

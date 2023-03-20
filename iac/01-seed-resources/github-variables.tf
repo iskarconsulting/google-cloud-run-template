@@ -100,6 +100,26 @@ resource "null_resource" "github_action_variables_gcp_iac_state_bucket_id" {
   }
 }
 
+# GCP IaC Seed Service Account EMail
+resource "null_resource" "github_action_variables_gcp_iac_seed_sa_email" {
+  triggers = {
+    gcp_iac_seed_sa_email = module.bootstrap.terraform_sa_email
+  }
+
+  provisioner "local-exec" {
+    when = create
+    environment = {
+      GH_TOKEN = var.github_repository_pat
+      OWNER    = var.github_owner_name,
+      REPO     = var.github_repository_name,
+      VARNAME  = "GCP_IAC_SERVICE_ACCOUNT_EMAIL",
+      VARVALUE = module.bootstrap.terraform_sa_email
+    }
+    command     = "../99-scripts/set-repository-variable.ps1"
+    interpreter = ["pwsh", "-File"]
+  }
+}
+
 # Web Container Image Name
 resource "null_resource" "github_action_variables_web_container_image_name" {
   triggers = {
