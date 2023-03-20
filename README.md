@@ -189,6 +189,8 @@ Add any IAM definitions as necessary for least privilege for production environm
 
 ### Housekeeping
 
+A Google Cloud Function has been added to the project to protect against excess billing (e.g. if a DDoS attack occurs). The function is called by a Cloud Billing messages on a Pub / Sub topic. The message is published approximately every 45 minutes. Configure the cloud function billing limits as required.
+
 Newly build Docker images are added to the Google Artifact Registry Repository. Consider implementing a process to remove deprecated images so that unexpected storage charges aren't incurred. Similarly, consider implementing a process to remove deprecated Google Cloud Run revisions.
 
 ## Optional Configuration
