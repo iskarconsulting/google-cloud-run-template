@@ -19,14 +19,14 @@ exports.limitUse = async pubsubEvent => {
     return;
   }
 
-  console.log(`Current cost exceeds budget. Disabling cloud run resource '${GCP_CLOUDRUN_ID}'.`);
+  console.log(`Current cost exceeds budget. Removing 'role/run.invoker' on cloud run resource '${GCP_CLOUDRUN_ID}'.`);
 
-  await _removeRunInvokeIamPolicyBinding(GCP_PROJECT_ID, GCP_REGION, GCP_CLOUDRUN_ID);
+  await _removeRunInvokerIamPolicyBinding(GCP_PROJECT_ID, GCP_REGION, GCP_CLOUDRUN_ID);
 
   console.log(`Role 'role/run.invoker' removed from IAM bindings on resource '${GCP_CLOUDRUN_ID}'.`);
 };
 
-const _removeRunInvokeIamPolicyBinding = async (projectId, region, cloudRunId) => {
+const _removeRunInvokerIamPolicyBinding = async (projectId, region, cloudRunId) => {
 
   const runClient = new ServicesClient();
 
